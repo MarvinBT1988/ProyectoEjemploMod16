@@ -11,6 +11,13 @@
 			"installMaven": "true",
 			"installGradle": "false"
 		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vmware.vscode-boot-dev-pack"
+			]
+		}
 	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
