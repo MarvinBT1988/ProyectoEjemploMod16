@@ -7,11 +7,15 @@
 	},
 	"customizations": {
     "vscode": {
-      "extensions": [
+		"settings": {
+        // Aquí es donde configuras el tema oscuro
+        "workbench.colorTheme": "Default Dark Modern"
+      	},
+      	"extensions": [
         "vscjava.vscode-java-pack",
         "vmware.vscode-boot-dev-pack",
 		"cweijan.vscode-mysql-client2"
-      ]
-    }
+      	]
+	}
   }
 }
