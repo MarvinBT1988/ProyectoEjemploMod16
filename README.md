@@ -20,3 +20,9 @@ FROM usuarios u, roles r
 WHERE u.login = 'sysadmin' AND r.nombre = 'admin';
 
 ```
+
+```bash
+
+mvn spring-boot:run
+
+```
