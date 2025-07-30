@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +27,8 @@ public class GrupoController {
     public String index(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size, @RequestParam("nombre") Optional<String> nombre, @RequestParam("descripcion") Optional<String> descripcion ){
         int currentPage = page.orElse(1) - 1; // si no está seteado se asigna 0
         int pageSize = size.orElse(5); // tamaño de la página, se asigna 5
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(currentPage, pageSize,sortByIdDesc);
         String nombreSearch = nombre.orElse("");
         String descripcionSearch = descripcion.orElse("");
         Page<Grupo> grupos = grupoService.findByNombreContainingAndDescripcionContaining(nombreSearch,descripcionSearch,pageable);
