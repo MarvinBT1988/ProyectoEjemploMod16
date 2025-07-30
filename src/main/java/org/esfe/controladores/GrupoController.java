@@ -24,12 +24,13 @@ public class GrupoController {
     private IGrupoService grupoService;
 
     @GetMapping
-    public String index(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size){
+    public String index(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size, @RequestParam("nombre") Optional<String> nombre, @RequestParam("descripcion") Optional<String> descripcion ){
         int currentPage = page.orElse(1) - 1; // si no está seteado se asigna 0
         int pageSize = size.orElse(5); // tamaño de la página, se asigna 5
         Pageable pageable = PageRequest.of(currentPage, pageSize);
-
-        Page<Grupo> grupos = grupoService.buscarTodosPaginados(pageable);
+        String nombreSearch = nombre.orElse("");
+        String descripcionSearch = descripcion.orElse("");
+        Page<Grupo> grupos = grupoService.findByNombreContainingAndDescripcionContaining(nombreSearch,descripcionSearch,pageable);
         model.addAttribute("grupos", grupos);
 
         int totalPages = grupos.getTotalPages();

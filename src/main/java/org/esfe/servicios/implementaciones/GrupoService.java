@@ -40,4 +40,10 @@ public class GrupoService implements IGrupoService {
     public void eliminarPorId(Integer id) {
         grupoRepository.deleteById(id);
     }
+
+    @Override
+    public Page<Grupo> findByNombreContainingAndDescripcionContaining(String nombre,String descripcion,Pageable pageable) {
+        return grupoRepository.findByNombreContainingAndDescripcionContaining(nombre,descripcion,pageable);
+    }
+
 }

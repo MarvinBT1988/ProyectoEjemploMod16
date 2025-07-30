@@ -12,6 +12,8 @@ public interface IGrupoService {
 
     List<Grupo> obtenerTodos();
 
+     Page<Grupo> findByNombreContainingAndDescripcionContaining(String nombre,String descripcion,Pageable pageable);
+
     Optional<Grupo> buscarPorId(Integer id);
 
     Grupo crearOEditar(Grupo grupo);

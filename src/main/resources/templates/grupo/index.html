@@ -1,7 +1,5 @@
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layouts/_mainLayout">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="/layouts/_mainLayout">
 
 <div layout:fragment="content">
 
@@ -9,9 +7,9 @@
     <div th:if="${msg != null}">
         <script>
             Swal.fire({
-            title: "Confirmación",
-            text: '[[${msg}]]',
-            icon: "success"
+                title: "Confirmación",
+                text: '[[${msg}]]',
+                icon: "success"
             });
         </script>
     </div>
@@ -28,27 +26,46 @@
     </div>
 
     <h1>Listado de grupos</h1>
-    <a th:href="@{/grupos/create}" class="btn btn-outline-primary">Nuevo grupo</a>
+    <form th:action="@{/grupos}" method="get">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Escriba el nombre del grupo">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea class="form-control" id="descripcion" name="descripcion" cols="12" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+         <button type="submit" class="btn btn-primary">Buscar</button>
+            <a th:href="@{/grupos/create}" class="btn btn-outline-primary">Nuevo grupo</a>
+    </form>
+
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${grupos}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.nombre}"></td>
-            <td th:text="${item.descripcion}"></td>
-            <td>
-                <a th:href="@{/grupos/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
-                <a th:href="@{/grupos/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
-                <a th:href="@{/grupos/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
-            </td>
-        </tr>
+            <tr th:each="item : ${grupos}">
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.nombre}"></td>
+                <td th:text="${item.descripcion}"></td>
+                <td>
+                    <a th:href="@{/grupos/details/{id} (id = ${item.id}) }"
+                        class="btn btn-outline-secondary">Detalles</a> |
+                    <a th:href="@{/grupos/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
+                    <a th:href="@{/grupos/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
+                </td>
+            </tr>
         </tbody>
     </table>
 
