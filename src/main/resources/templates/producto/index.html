@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/_mainLayout}">
+<head>
+    <title>Lista de Productos</title>
+</head>
+<body>
+    <div layout:fragment="content">
+         <!-- Mostrar mensaje de confirmación en caso de éxito -->
+    <div th:if="${msg != null}">
+        <script>
+            Swal.fire({
+            title: "Confirmación",
+            text: '[[${msg}]]',
+            icon: "success"
+            });
+        </script>
+    </div>
+
+    <!-- Mostrar mensaje de error en caso de error -->
+    <div th:if="${error != null}">
+        <script>
+            Swal.fire({
+                title: "Error",
+                text: '[[${error}]]',
+                icon: "error"
+            });
+        </script>
+    </div>
+        <h1>Lista de Productos</h1>
+        <p>
+            <a th:href="@{/producto/create}" class="btn btn-primary">Crear Nuevo Producto</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="producto : ${productos}">
+                    <td th:text="${producto.id}"></td>
+                    <td th:text="${producto.nombre}"></td>
+                    <td th:text="${producto.descripcion}"></td>
+                    <td>
+                        <img th:if="${producto.imagen != null}" 
+                             th:src="@{'/producto/imagen/' + ${producto.id}}"
+                             style="max-width: 100px; max-height: 100px;"/>
+                    </td>
+                    <td>
+                        <a th:href="@{/producto/edit/{id}(id=${producto.id})}" class="btn btn-warning">Editar</a>
+                        <a th:href="@{/producto/details/{id}(id=${producto.id})}" class="btn btn-info">Detalles</a>
+                        <a th:href="@{/producto/remove/{id}(id=${producto.id})}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+         <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                <a class="page-link" th:href="@{|/grupos?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+            </li>
+        </ul>
+    </nav>
+    </div>
+</body>
+</html>
