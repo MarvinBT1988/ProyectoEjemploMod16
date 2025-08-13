@@ -2,7 +2,7 @@ package org.esfe.modelos;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
+import org.springframework.web.multipart.MultipartFile;
 @Entity
 @Table(name = "productos")
 public class Producto {
@@ -20,6 +20,9 @@ public class Producto {
     @Lob
     @Column(name = "imagen", columnDefinition="LONGBLOB")
     private byte[] imagen;
+
+     @Transient
+     private MultipartFile fileImagen;
 
     public Integer getId() {
         return id;
@@ -45,11 +48,19 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-     public byte[] getImagen() {
+    public byte[] getImagen() {
         return imagen;
     }
 
     public void setImagen(byte[] imagen) {
         this.imagen = imagen;
+    }
+
+    public MultipartFile getFileImagen() {
+        return fileImagen;
+    }
+
+    public void setFileImagen(MultipartFile imagen) {
+        this.fileImagen = fileImagen;
     }
 }

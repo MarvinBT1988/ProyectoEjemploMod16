@@ -52,7 +52,7 @@ public class ProductoController {
         model.addAttribute("producto", new Producto());
         return "producto/create";
     }
- @PostMapping("/save")
+/*  @PostMapping("/save")
     public String save(Producto producto, BindingResult result, Model model, RedirectAttributes attributes){
         if(result.hasErrors()){
             model.addAttribute(producto);
@@ -62,27 +62,33 @@ public class ProductoController {
         productoService.crearOEditar(producto);
         attributes.addFlashAttribute("msg", "producto creado correctamente");
         return "redirect:/producto";
-    }
-    /* 
+    }*/
      @PostMapping("/save")
-    public String save(Producto producto, BindingResult result, Model model,@RequestParam("imagenFile") MultipartFile imagenFile, RedirectAttributes attributes){
+    public String save(Producto producto, BindingResult result, Model model, RedirectAttributes attributes){
         if(result.hasErrors()){
             model.addAttribute(producto);
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
             return "producto/create";
         }
-         Producto productoExiste = productoService.buscarPorId(1).get();
-         if (!imagenFile.isEmpty()) {
-           // producto.setImagen(imagenFile.getBytes());
+         //Optional<Producto> productoExiste = productoService.buscarPorId(1).get();
+         if (producto.getFileImagen()!=null && !producto.getFileImagen().isEmpty()) {
+            try {
+                // Verifica si el archivo es una imagen
+               producto.setImagen(producto.getFileImagen().getBytes());
+            } catch (Exception e) {
+                attributes.addFlashAttribute("error", "Error al procesar la imagen: " + e.getMessage());
+                return "redirect:/producto/create";
+            }
+            // Guarda la imagen en el objeto producto
+           
         }
         else{
-            producto.setImagen(productoExiste.getImagen());
+            //producto.setImagen(productoExiste.getImagen());
         }
         productoService.crearOEditar(producto);
         attributes.addFlashAttribute("msg", "producto creado correctamente");
         return "redirect:/producto";
     }
-*/
    @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model){
         Producto producto = productoService.buscarPorId(id).get();
