@@ -20,9 +20,7 @@ public class Producto {
     @Lob
     @Column(name = "imagen", columnDefinition="LONGBLOB")
     private byte[] imagen;
-
-     @Transient
-     private MultipartFile fileImagen;
+ 
 
     public Integer getId() {
         return id;
@@ -54,13 +52,5 @@ public class Producto {
 
     public void setImagen(byte[] imagen) {
         this.imagen = imagen;
-    }
-
-    public MultipartFile getFileImagen() {
-        return fileImagen;
-    }
-
-    public void setFileImagen(MultipartFile imagen) {
-        this.fileImagen = fileImagen;
     }
 }

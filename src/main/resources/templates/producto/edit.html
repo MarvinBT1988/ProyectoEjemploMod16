@@ -25,7 +25,7 @@
                 <img th:if="${producto.imagen != null}" 
                      th:src="@{'/producto/imagen/' + ${producto.id}}"
                      style="max-width: 200px; max-height: 200px;"/>
-                <input type="file" class="form-control mt-2" id="imagenFile" name="imagenFile" accept="image/*"/>
+                <input type="file" class="form-control mt-2" id="imagenFile" name="fileImagen" accept="image/*"/>
                 <small class="form-text text-muted">Deja en blanco para mantener la imagen actual</small>
             </div>
             <div class="mt-3">

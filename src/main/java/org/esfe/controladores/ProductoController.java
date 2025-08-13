@@ -52,38 +52,27 @@ public class ProductoController {
         model.addAttribute("producto", new Producto());
         return "producto/create";
     }
-/*  @PostMapping("/save")
-    public String save(Producto producto, BindingResult result, Model model, RedirectAttributes attributes){
-        if(result.hasErrors()){
-            model.addAttribute(producto);
-            attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
-            return "producto/create";
-        }
-        productoService.crearOEditar(producto);
-        attributes.addFlashAttribute("msg", "producto creado correctamente");
-        return "redirect:/producto";
-    }*/
      @PostMapping("/save")
-    public String save(Producto producto, BindingResult result, Model model, RedirectAttributes attributes){
+    public String save(Producto producto, @RequestParam("fileImagen") MultipartFile fileImagen, BindingResult result, Model model, RedirectAttributes attributes){
         if(result.hasErrors()){
             model.addAttribute(producto);
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
             return "producto/create";
         }
-         //Optional<Producto> productoExiste = productoService.buscarPorId(1).get();
-         if (producto.getFileImagen()!=null && !producto.getFileImagen().isEmpty()) {
-            try {
-                // Verifica si el archivo es una imagen
-               producto.setImagen(producto.getFileImagen().getBytes());
-            } catch (Exception e) {
-                attributes.addFlashAttribute("error", "Error al procesar la imagen: " + e.getMessage());
-                return "redirect:/producto/create";
-            }
-            // Guarda la imagen en el objeto producto
-           
+         if (fileImagen != null && !fileImagen.isEmpty()) {
+        try {
+            producto.setImagen(fileImagen.getBytes());
+        } catch (Exception e) {
+            attributes.addFlashAttribute("error", "Error al procesar la imagen: " + e.getMessage());
+            return "redirect:/producto/create";
         }
-        else{
-            //producto.setImagen(productoExiste.getImagen());
+        } else {
+            Producto productoExiste = productoService.buscarPorId(producto.getId()).get();
+            producto.setImagen(productoExiste.getImagen());
+        // En caso de que no se suba una nueva imagen,
+        // puedes decidir qué hacer. Por ejemplo, si es una edición,
+        // podrías buscar el producto existente y mantener la imagen anterior.
+        // Si es un nuevo producto, puedes dejar la imagen como null o asignar una por defecto.
         }
         productoService.crearOEditar(producto);
         attributes.addFlashAttribute("msg", "producto creado correctamente");
