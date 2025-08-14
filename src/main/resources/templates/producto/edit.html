@@ -24,7 +24,7 @@
                 <label for="imagenFile">Imagen actual:</label>
                 <img th:if="${producto.imagen != null}" 
                      th:src="@{'/producto/imagen/' + ${producto.id}}"
-                     style="max-width: 200px; max-height: 200px;"/>
+                     style="max-width: 200px; max-height: 200px;" id="vista-previa"/>
                 <input type="file" class="form-control mt-2" id="imagenFile" name="fileImagen" accept="image/*"/>
                 <small class="form-text text-muted">Deja en blanco para mantener la imagen actual</small>
             </div>
@@ -33,6 +33,27 @@
                 <a th:href="@{/producto}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
+         <script>
+            const imagenInput = document.getElementById('imagenFile');
+            const vistaPrevia = document.getElementById('vista-previa');
+
+            imagenInput.addEventListener('change', function (event) {
+                const archivo = event.target.files[0];
+                if (archivo) {
+                    const lector = new FileReader();
+
+                    lector.onload = function (e) {
+                        vistaPrevia.src = e.target.result;
+                        vistaPrevia.style.display = 'block';
+                    };
+
+                    lector.readAsDataURL(archivo);
+                } else {
+                    vistaPrevia.src = '#';
+                    vistaPrevia.style.display = 'none';
+                }
+            });
+        </script>
     </div>
 </body>
 </html>
