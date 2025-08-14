@@ -26,3 +26,4 @@ WHERE u.login = 'sysadmin' AND r.nombre = 'admin';
 mvn spring-boot:run
 
 ```
+estoy en la rama guardar imagenes disco
