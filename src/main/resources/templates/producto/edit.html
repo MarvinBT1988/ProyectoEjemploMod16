@@ -26,6 +26,7 @@
                      th:src="@{'/producto/imagen/' + ${producto.id}}"
                      style="max-width: 200px; max-height: 200px;" id="vista-previa"/>
                 <input type="file" class="form-control mt-2" id="imagenFile" name="fileImagen" accept="image/*"/>
+                <input type="hidden" th:field="*{imagen}" />
                 <small class="form-text text-muted">Deja en blanco para mantener la imagen actual</small>
             </div>
             <div class="mt-3">

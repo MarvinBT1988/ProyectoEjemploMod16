@@ -27,3 +27,8 @@ mvn spring-boot:run
 
 ```
 estoy en la rama guardar imagenes disco
+
+```sql
+update productos set imagen = null where id>0;
+ALTER TABLE productos MODIFY COLUMN imagen VARCHAR(255);
+```

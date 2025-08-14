@@ -17,9 +17,8 @@ public class Producto {
     @NotBlank(message = "La descripción es obligatoria")
     private String descripcion;
     
-    @Lob
-    @Column(name = "imagen", columnDefinition="LONGBLOB")
-    private byte[] imagen;
+    
+    private String imagen;
  
 
     public Integer getId() {
@@ -46,11 +45,11 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public byte[] getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    public void setImagen(byte[] imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
 }
