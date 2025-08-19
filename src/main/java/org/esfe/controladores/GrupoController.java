@@ -16,15 +16,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.esfe.servicios.utilerias.PdfGeneratorService;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/grupos")
 public class GrupoController {
     @Autowired
     private IGrupoService grupoService;
+    @Autowired
+    private PdfGeneratorService pdfGeneratorService;
 
     @GetMapping
-    public String index(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size){
+    public String index(Model model, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1) - 1; // si no está seteado se asigna 0
         int pageSize = size.orElse(5); // tamaño de la página, se asigna 5
         Pageable pageable = PageRequest.of(currentPage, pageSize);
@@ -44,13 +55,13 @@ public class GrupoController {
     }
 
     @GetMapping("/create")
-    public String create(Grupo grupo){
+    public String create(Grupo grupo) {
         return "grupo/create";
     }
 
     @PostMapping("/save")
-    public String save(Grupo grupo, BindingResult result, Model model, RedirectAttributes attributes){
-        if(result.hasErrors()){
+    public String save(Grupo grupo, BindingResult result, Model model, RedirectAttributes attributes) {
+        if (result.hasErrors()) {
             model.addAttribute(grupo);
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
             return "grupo/create";
@@ -62,30 +73,53 @@ public class GrupoController {
     }
 
     @GetMapping("/details/{id}")
-    public String details(@PathVariable("id") Integer id, Model model){
+    public String details(@PathVariable("id") Integer id, Model model) {
         Grupo grupo = grupoService.buscarPorId(id).get();
         model.addAttribute("grupo", grupo);
         return "grupo/details";
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, Model model){
+    public String edit(@PathVariable("id") Integer id, Model model) {
         Grupo grupo = grupoService.buscarPorId(id).get();
         model.addAttribute("grupo", grupo);
         return "grupo/edit";
     }
 
     @GetMapping("/remove/{id}")
-    public String remove(@PathVariable("id") Integer id, Model model){
+    public String remove(@PathVariable("id") Integer id, Model model) {
         Grupo grupo = grupoService.buscarPorId(id).get();
         model.addAttribute("grupo", grupo);
         return "grupo/delete";
     }
 
     @PostMapping("/delete")
-    public String delete(Grupo grupo, RedirectAttributes attributes){
+    public String delete(Grupo grupo, RedirectAttributes attributes) {
         grupoService.eliminarPorId(grupo.getId());
         attributes.addFlashAttribute("msg", "Grupo eliminado correctamente");
         return "redirect:/grupos";
+    }
+
+    @GetMapping("/reportegeneral")
+    public ResponseEntity<byte[]> ReporteGeneral() {
+
+        try {
+            List<Grupo> grupos = grupoService.obtenerTodos();
+
+            // Genera el PDF. Si hay un error aquí, la excepción será capturada.
+            byte[] pdfBytes = pdfGeneratorService.generatePdfFromHtml("reportes/rpGrupos", "grupos", grupos);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            // Este es para que se descargue el archivo
+            //headers.setContentDispositionFormData("attachment", "reporte_general.pdf");
+            // Este es para que se muestre vista previa del archivo en el navegador
+            headers.setContentDispositionFormData("inline", "reporte_general.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
