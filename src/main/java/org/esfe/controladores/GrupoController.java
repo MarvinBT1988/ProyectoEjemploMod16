@@ -100,8 +100,8 @@ public class GrupoController {
         return "redirect:/grupos";
     }
 
-    @GetMapping("/reportegeneral")
-    public ResponseEntity<byte[]> ReporteGeneral() {
+    @GetMapping("/reportegeneral/{visualizacion}")
+    public ResponseEntity<byte[]> ReporteGeneral(@PathVariable("visualizacion") String visualizacion) {
 
         try {
             List<Grupo> grupos = grupoService.obtenerTodos();
@@ -110,14 +110,10 @@ public class GrupoController {
             byte[] pdfBytes = pdfGeneratorService.generatePdfFromHtml("reportes/rpGrupos", "grupos", grupos);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            // Este es para que se descargue el archivo
-            //headers.setContentDispositionFormData("attachment", "reporte_general.pdf");
-            // Este es para que se muestre vista previa del archivo en el navegador
-            headers.setContentDispositionFormData("inline", "reporte_general.pdf");
-
+            headers.setContentType(MediaType.APPLICATION_PDF);           
+            // inline= vista previa, attachment=descarga el archivo
+           headers.add("Content-Disposition", visualizacion+"; filename=reporte_general.pdf");
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-
         } catch (IOException e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
